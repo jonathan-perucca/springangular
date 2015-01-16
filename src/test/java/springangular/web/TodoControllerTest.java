@@ -14,6 +14,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import springangular.SpringangularApplication;
 import springangular.domain.Todo;
 import springangular.repository.TodoRepository;
+import springangular.web.dto.TodoDTO;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -75,9 +76,9 @@ public class TodoControllerTest {
         .then()
             .log().all()
             .statusCode(OK.value())
-            .body("id", is(savedTodo.getId().intValue()))
-            .body("title", is(savedTodo.getTitle()))
-            .body("description", is(savedTodo.getDescription()));
+            .body("todo.id", is(savedTodo.getId().intValue()))
+            .body("todo.title", is(savedTodo.getTitle()))
+            .body("todo.description", is(savedTodo.getDescription()));
     }
 
     @Test
@@ -85,6 +86,7 @@ public class TodoControllerTest {
         final String todoTitle = "NewTest";
         final String todoDescription = "NewDesc";
         Todo todoToCreate = new Todo.Builder().withTitle(todoTitle).withDescription(todoDescription).build();
+        TodoDTO todoDTO = new TodoDTO(todoToCreate);
         
         // TODO :: To split in 2 differents tests (E2E / Api test)
         // End to end test
@@ -92,16 +94,16 @@ public class TodoControllerTest {
         // Start with api test
         given()
             .header("Content-Type", "application/json")
-            .body(todoToCreate)
+            .body(todoDTO)
             .log().all()
         .when()
             .put("/todo")
         .then()
             .log().all()
             .statusCode(OK.value())
-            .body("id", notNullValue())
-            .body("title", is(todoTitle))
-            .body("description", is(todoDescription));
+            .body("todo.id", notNullValue())
+            .body("todo.title", is(todoTitle))
+            .body("todo.description", is(todoDescription));
 
         // And then assert what has been done in db
         Todo createdTodo = todoRepository.findByTitle(todoTitle);
@@ -118,20 +120,22 @@ public class TodoControllerTest {
         savedTodo.setTitle(updatedTitle);
         savedTodo.setDescription(updatedDescription);
 
+        TodoDTO todoDTO = new TodoDTO(savedTodo);
+
         // TODO :: To split in 2 differents tests (E2E / Api test)
         
         given()
             .header("Content-Type", "application/json")
-            .body(savedTodo)
+            .body(todoDTO)
             .log().all()
         .when()
             .put("/todo")
         .then()
             .log().all()
             .statusCode(OK.value())
-            .body("id", is(savedTodo.getId().intValue()))
-            .body("title", is(updatedTitle))
-            .body("description", is(updatedDescription));
+            .body("todo.id", is(savedTodo.getId().intValue()))
+            .body("todo.title", is(updatedTitle))
+            .body("todo.description", is(updatedDescription));
     }
     
     @Test

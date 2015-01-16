@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan({"springangular.web", "springangular.repository"})
+@ComponentScan({"springangular.web", "springangular.repository", "springangular.config"})
 @EnableAutoConfiguration
 public class SpringangularApplication {
 

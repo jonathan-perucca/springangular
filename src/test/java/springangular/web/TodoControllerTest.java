@@ -1,6 +1,5 @@
 package springangular.web;
 
-import com.google.common.collect.FluentIterable;
 import com.jayway.restassured.RestAssured;
 import org.junit.After;
 import org.junit.Before;
@@ -16,16 +15,11 @@ import springangular.SpringangularApplication;
 import springangular.domain.Todo;
 import springangular.repository.TodoRepository;
 
-import java.util.List;
-
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.http.HttpStatus.*;
+import static springangular.web.exception.ErrorCode.NO_ENTITY_DELETION;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SpringangularApplication.class)
@@ -58,7 +52,7 @@ public class TodoControllerTest {
     }
 
     @Test
-    public void should_GetAllTodos_WithTwoTestTodoInResult() {
+    public void should_Get_AllTodos_WithTwoTestTodoInResult() {
         given()
             .log().all()
         .when()
@@ -73,7 +67,7 @@ public class TodoControllerTest {
     }
 
     @Test
-    public void should_GetOneTodoById_WithOneTestTodoInResult() throws Exception {
+    public void should_Get_OneTodoById_WithOneTestTodoInResult() throws Exception {
         given()
             .log().all()
         .when()
@@ -87,11 +81,12 @@ public class TodoControllerTest {
     }
 
     @Test
-    public void should_CreateOneTodo_Nominal() throws Exception {
+    public void should_Create_OneTodo_Nominal() throws Exception {
         final String todoTitle = "NewTest";
         final String todoDescription = "NewDesc";
         Todo todoToCreate = new Todo.Builder().withTitle(todoTitle).withDescription(todoDescription).build();
         
+        // TODO :: To split in 2 differents tests (E2E / Api test)
         // End to end test
         
         // Start with api test
@@ -103,7 +98,10 @@ public class TodoControllerTest {
             .put("/todo")
         .then()
             .log().all()
-            .statusCode(CREATED.value());
+            .statusCode(OK.value())
+            .body("id", notNullValue())
+            .body("title", is(todoTitle))
+            .body("description", is(todoDescription));
 
         // And then assert what has been done in db
         Todo createdTodo = todoRepository.findByTitle(todoTitle);
@@ -114,7 +112,31 @@ public class TodoControllerTest {
     }
     
     @Test
-    public void should_DeleteOneTodo_Nominal() {
+    public void should_Update_Todo_Nominal() {
+        final String updatedTitle = "NewTitle of todo";
+        final String updatedDescription = "NewDescription of todo";
+        savedTodo.setTitle(updatedTitle);
+        savedTodo.setDescription(updatedDescription);
+
+        // TODO :: To split in 2 differents tests (E2E / Api test)
+        
+        given()
+            .header("Content-Type", "application/json")
+            .body(savedTodo)
+            .log().all()
+        .when()
+            .put("/todo")
+        .then()
+            .log().all()
+            .statusCode(OK.value())
+            .body("id", is(savedTodo.getId().intValue()))
+            .body("title", is(updatedTitle))
+            .body("description", is(updatedDescription));
+    }
+    
+    @Test
+    public void should_Delete_OneTodo_Nominal() {
+        // TODO :: To split in 2 differents tests (E2E / Api test)
         // End to end test
         
         // Check todos db count
@@ -133,5 +155,25 @@ public class TodoControllerTest {
         long finalTotalEntries = todoRepository.count();
         assertThat(finalTotalEntries, not(initialTotalEntries));
         assertThat(finalTotalEntries, is(initialTotalEntries - 1));
+    }
+    
+    @Test
+    public void shouldNot_Delete_OneTodo_WhenNotFound() {
+        long initialTotalEntries = todoRepository.count();
+
+        // TODO :: To split in 2 differents tests (E2E / Api test)
+        given()
+            .log().all()
+        .when()
+            .delete("/todo/{id}", 100)
+        .then()
+            .log().all()
+            .statusCode(NOT_FOUND.value())
+            .body("url", is("/todo/100"))
+            .body("errorCode", is(NO_ENTITY_DELETION.getCode()))
+            .body("reasonCause", is(NO_ENTITY_DELETION.getDescription()));
+
+        long finalTotalEntries = todoRepository.count();
+        assertThat(finalTotalEntries, is(initialTotalEntries));
     }
 }

@@ -22,7 +22,6 @@ public class Todo implements Serializable {
     public Todo(){}
     
     private Todo(Builder builder) {
-        this.id = builder.id;
         this.title = builder.title;
         this.description = builder.description;
     }
@@ -52,16 +51,10 @@ public class Todo implements Serializable {
     }
 
     public static class Builder {
-        private Long id;
         private String title;
         private String description;
 
         public Builder() {
-        }
-
-        public Builder withId(Long id) {
-            this.id = id;
-            return this;
         }
 
         public Builder withTitle(String title) {

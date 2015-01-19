@@ -29,8 +29,8 @@ public class TodoControllerBigTest extends WebAppTest{
     
     @Before
     public void setUp() {
-        savedTodo = new Todo.Builder().withTitle("Test").withDescription("Description Test").build();
-        Todo secondTodoTest = new Todo.Builder().withTitle("Secondtest").withDescription("Second description test").build();
+        savedTodo = new Todo.Builder().withDescription("Description Test").build();
+        Todo secondTodoTest = new Todo.Builder().withDescription("Second description test").build();
 
         todoRepository.save(savedTodo);
         todoRepository.save(secondTodoTest);
@@ -50,9 +50,7 @@ public class TodoControllerBigTest extends WebAppTest{
         .then()
             .log().all()
             .statusCode(OK.value())
-            .body("[0].id", is(savedTodo.getId()
-                                        .intValue()))
-            .body("[0].title", is(savedTodo.getTitle()))
+            .body("[0].id", is(savedTodo.getId().intValue()))
             .body("[0].description", is(savedTodo.getDescription()));
     }
 
@@ -65,17 +63,14 @@ public class TodoControllerBigTest extends WebAppTest{
         .then()
             .log().all()
             .statusCode(OK.value())
-            .body("todo.id", is(savedTodo.getId()
-                                         .intValue()))
-            .body("todo.title", is(savedTodo.getTitle()))
+            .body("todo.id", is(savedTodo.getId().intValue()))
             .body("todo.description", is(savedTodo.getDescription()));
     }
     
     @Test
     public void should_Create_OneTodo_Nominal() {
-        final String todoTitle = "NewTest";
         final String todoDescription = "NewDesc";
-        Todo todoToCreate = new Todo.Builder().withTitle(todoTitle).withDescription(todoDescription).build();
+        Todo todoToCreate = new Todo.Builder().withDescription(todoDescription).build();
         TodoDTO todoDTO = new TodoDTO(todoToCreate);
 
         given()
@@ -88,11 +83,10 @@ public class TodoControllerBigTest extends WebAppTest{
             .log().all()
             .statusCode(OK.value())
             .body("todo.id", notNullValue())
-            .body("todo.title", is(todoTitle))
             .body("todo.description", is(todoDescription));
 
         // And then assert what has been done in db
-        Todo createdTodo = todoRepository.findByTitle(todoTitle);
+        Todo createdTodo = todoRepository.findByDescription(todoDescription);
 
         assertThat(createdTodo, notNullValue());
         assertThat(createdTodo.getId(), notNullValue());
@@ -100,8 +94,8 @@ public class TodoControllerBigTest extends WebAppTest{
     }
     
     @Test
-    public void shouldNot_Create_Todo_WhenNoTitle() {
-        TodoDTO todoDTO = new TodoDTO(new Todo.Builder().withDescription("Description").build());
+    public void shouldNot_Create_Todo_WhenNoDescription() {
+        TodoDTO todoDTO = new TodoDTO(new Todo.Builder().build());
         
         given()
             .header("Content-Type", "application/json")
@@ -115,14 +109,11 @@ public class TodoControllerBigTest extends WebAppTest{
             .body("url", is("/todo"))
             .body("errorCode", is(WRONG_ENTITY_INFORMATION.getCode()))
             .body("reasonCause", is(WRONG_ENTITY_INFORMATION.getDescription()));
-
     }
     
     @Test
     public void should_Update_Todo_Nominal() {
-        final String updatedTitle = "NewTitle of todo";
         final String updatedDescription = "NewDescription of todo";
-        savedTodo.setTitle(updatedTitle);
         savedTodo.setDescription(updatedDescription);
 
         TodoDTO todoDTO = new TodoDTO(savedTodo);
@@ -136,13 +127,11 @@ public class TodoControllerBigTest extends WebAppTest{
         .then()
             .log().all()
             .statusCode(OK.value())
-            .body("todo.id", is(savedTodo.getId()
-                                         .intValue()))
-            .body("todo.title", is(updatedTitle))
+            .body("todo.id", is(savedTodo.getId().intValue()))
             .body("todo.description", is(updatedDescription));
 
-        Todo updatedTodo = todoRepository.findByTitle(updatedTitle);
-        
+        Todo updatedTodo = todoRepository.findByDescription(updatedDescription);
+
         assertThat(updatedTodo, notNullValue());
         assertThat(updatedTodo.getId(), is(savedTodo.getId()));
         assertThat(updatedTodo.getDescription(), is(updatedDescription));

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SpringAngular - Todo App</title>
+    <link rel="stylesheet" href="./bower_components/bootstrap-css-only/css/bootstrap.min.css" />
+</head>
+<body ng-app="todoApp">
+<div class="container" ng-controller="TodoController">
+    <div class="page-header">
+        <h1>Todo list</h1>
+    </div>
+    <div class="alert alert-info" role="alert" ng-hide="todos && todos.length > 0">
+        There are no item in your todo list yet.
+    </div>
+    <form class="form-horizontal" role="form" ng-submit="addTodo(newTodo)">
+        <div class="form-group" ng-repeat="todo in todos | orderBy: '-checked'">
+            <input type="hidden" ng-model="todo.id" value="{{todo.id}}"/>
+            <div class="checkbox col-xs-9">
+                <label>
+                    <input type="checkbox" ng-model="todo.checked" ng-change="updateTodo(todo)"/> {{todo.description}}
+                </label>
+            </div>
+            <div class="col-xs-3">
+                <button class="pull-right btn btn-danger" type="button" title="Delete"
+                        ng-click="deleteTodo(todo)">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </div>
+        </div>
+        <hr />
+        <div class="input-group">
+            <input type="text" class="form-control" ng-model="newTodo.description" placeholder="Enter the description..." />
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit" ng-disabled="!newTodo" title="Add">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </span>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="./bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="./bower_components/angular-resource/angular-resource.min.js"></script>
+<script type="text/javascript" src="./bower_components/lodash/dist/lodash.min.js"></script>
+<script type="text/javascript" src="./app/app.js"></script>
+<script type="text/javascript" src="./app/todo.controller.js"></script>
+<script type="text/javascript" src="./app/todo.service.js"></script>
+</body>
+</html>

@@ -20,6 +20,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static springangular.web.exception.ErrorCode.NO_ENTITY_DELETION;
 
 @RestController
+@RequestMapping("/todo")
 public class TodoController {
 
     @Autowired
@@ -28,7 +29,7 @@ public class TodoController {
     @Autowired
     private Mapper mapper;
     
-    @RequestMapping(value = "/todo", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public List<TodoDTO> list() {
         List<Todo> todos = from(todoRepository.findAll()).toList();
         List<TodoDTO> todoDtos = newArrayList();
@@ -36,13 +37,13 @@ public class TodoController {
         return todoDtos;
     }
 
-    @RequestMapping(value = "/todo/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public TodoDTO getById(@PathVariable long id) {
         Todo todo = todoRepository.findOne(id);
         return mapper.map(todo, TodoDTO.class);
     }
 
-    @RequestMapping(value = "/todo", method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT)
     public TodoDTO create(@RequestBody TodoDTO todoDTO) {
         Todo todo = mapper.map(todoDTO, Todo.class);
 
@@ -56,7 +57,7 @@ public class TodoController {
         return mapper.map(savedTodo, TodoDTO.class);
     }
 
-    @RequestMapping(value = "/todo/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
         try {

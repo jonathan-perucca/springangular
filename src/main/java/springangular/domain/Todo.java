@@ -14,15 +14,13 @@ public class Todo implements Serializable {
     private Long id;
     
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
     private String description;
+    
+    private boolean checked;
 
     public Todo(){}
     
     private Todo(Builder builder) {
-        this.title = builder.title;
         this.description = builder.description;
     }
 
@@ -34,14 +32,6 @@ public class Todo implements Serializable {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -50,16 +40,18 @@ public class Todo implements Serializable {
         this.description = description;
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     public static class Builder {
-        private String title;
         private String description;
 
         public Builder() {
-        }
-
-        public Builder withTitle(String title) {
-            this.title = title;
-            return this;
         }
 
         public Builder withDescription(String description) {

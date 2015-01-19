@@ -1,8 +1,5 @@
 package springangular.web.exception;
 
-/**
- * Created by Formation on 16/01/2015.
- */
 public class ErrorInfo {
     private String url;
     private int errorCode;

@@ -14,7 +14,8 @@
         There are no item in your todo list yet.
     </div>
     <form class="form-horizontal" role="form" ng-submit="addTodo(newTodo)">
-        <div class="form-group" ng-repeat="todo in todos | orderBy: '-checked'">
+        <input ng-model="query" placeholder="Find a todo"/>
+        <div class="form-group" ng-repeat="todo in todos | orderBy: '-checked' | filter:query">
             <input type="hidden" ng-model="todo.id" value="{{todo.id}}"/>
             <div class="checkbox col-xs-9">
                 <label>

@@ -12,7 +12,7 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.http.HttpStatus.*;
-import static springangular.web.exception.ErrorCode.NO_ENTITY_DELETION;
+import static springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
 import static springangular.web.exception.ErrorCode.WRONG_ENTITY_INFORMATION;
 
 /**
@@ -20,7 +20,7 @@ import static springangular.web.exception.ErrorCode.WRONG_ENTITY_INFORMATION;
  * Pushes an API call, checks that DB has expected datas
  * 
  **/
-public class TodoControllerBigTest extends WebAppTest{
+public class TodoControllerBigTest extends WebAppTest {
 
     @Autowired
     private TodoRepository todoRepository;
@@ -68,6 +68,21 @@ public class TodoControllerBigTest extends WebAppTest{
     }
     
     @Test
+    public void shouldNot_Get_OneTodoById_WhenNotFound() {
+        final int unknownId = 100;
+        given()
+            .log().all()
+        .when()
+            .get("/todo/{id}", unknownId)
+        .then()
+            .log().all()
+            .statusCode(NOT_FOUND.value())
+            .body("url", is("/todo/" + unknownId))
+            .body("errorCode", is(NO_ENTITY_FOUND.getCode()))
+            .body("reasonCause", is(NO_ENTITY_FOUND.getDescription()));
+    }
+    
+    @Test
     public void should_Create_OneTodo_Nominal() {
         final String todoDescription = "NewDesc";
         Todo todoToCreate = new Todo.Builder().withDescription(todoDescription).build();
@@ -78,10 +93,10 @@ public class TodoControllerBigTest extends WebAppTest{
             .body(todoDTO)
             .log().all()
         .when()
-            .put("/todo")
+            .post("/todo")
         .then()
             .log().all()
-            .statusCode(OK.value())
+            .statusCode(CREATED.value())
             .body("todo.id", notNullValue())
             .body("todo.description", is(todoDescription));
 
@@ -102,7 +117,7 @@ public class TodoControllerBigTest extends WebAppTest{
             .body(todoDTO)
             .log().all()
         .when()
-            .put("/todo")
+            .post("/todo")
         .then()
             .statusCode(BAD_REQUEST.value())
             .log().all()
@@ -113,17 +128,17 @@ public class TodoControllerBigTest extends WebAppTest{
     
     @Test
     public void should_Update_Todo_Nominal() {
+        Long savedTodoId = savedTodo.getId();
         final String updatedDescription = "NewDescription of todo";
-        savedTodo.setDescription(updatedDescription);
 
-        TodoDTO todoDTO = new TodoDTO(savedTodo);
-
+        TodoDTO todoDTO = new TodoDTO(new Todo.Builder().withDescription(updatedDescription).build());
+        
         given()
             .header("Content-Type", "application/json")
             .body(todoDTO)
             .log().all()
         .when()
-            .put("/todo")
+            .put("/todo/{id}", savedTodoId)
         .then()
             .log().all()
             .statusCode(OK.value())
@@ -168,8 +183,8 @@ public class TodoControllerBigTest extends WebAppTest{
             .log().all()
             .statusCode(NOT_FOUND.value())
             .body("url", is("/todo/100"))
-            .body("errorCode", is(NO_ENTITY_DELETION.getCode()))
-            .body("reasonCause", is(NO_ENTITY_DELETION.getDescription()));
+            .body("errorCode", is(NO_ENTITY_FOUND.getCode()))
+            .body("reasonCause", is(NO_ENTITY_FOUND.getDescription()));
 
         long finalTotalEntries = todoRepository.count();
         assertThat(finalTotalEntries, is(initialTotalEntries));

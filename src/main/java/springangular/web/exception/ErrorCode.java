@@ -1,7 +1,7 @@
 package springangular.web.exception;
 
 public enum ErrorCode {
-    NO_ENTITY_DELETION(10001, "No entity found for deletion"),
+    NO_ENTITY_FOUND(10001, "No entity found"),
     WRONG_ENTITY_INFORMATION(10002, "Could not create/update entity with wrong informations");
     
     private int code;

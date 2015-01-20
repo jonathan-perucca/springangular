@@ -17,7 +17,7 @@ import java.util.List;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
-import static springangular.web.exception.ErrorCode.NO_ENTITY_DELETION;
+import static springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
 
 @RestController
 @RequestMapping("/todo")
@@ -28,7 +28,7 @@ public class TodoController {
 
     @Autowired
     private Mapper mapper;
-    
+
     @RequestMapping(method = RequestMethod.GET)
     public List<TodoDTO> list() {
         List<Todo> todos = from(todoRepository.findAll()).toList();
@@ -40,10 +40,16 @@ public class TodoController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public TodoDTO getById(@PathVariable long id) {
         Todo todo = todoRepository.findOne(id);
+        
+        if(null == todo) {
+            throw new NotFoundException(NO_ENTITY_FOUND);
+        }
+        
         return mapper.map(todo, TodoDTO.class);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     public TodoDTO create(@RequestBody TodoDTO todoDTO) {
         Todo todo = mapper.map(todoDTO, Todo.class);
 
@@ -56,6 +62,22 @@ public class TodoController {
         
         return mapper.map(savedTodo, TodoDTO.class);
     }
+    
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public TodoDTO update(@PathVariable long id, @RequestBody TodoDTO todoDTO) {
+        Todo todo = mapper.map(todoDTO, Todo.class);
+
+        Todo todoToUpdate = todoRepository.findOne(id);
+        
+        if(null == todoToUpdate) {
+            throw new NotFoundException(NO_ENTITY_FOUND);
+        }
+        
+        todo.setId(todoToUpdate.getId());
+        Todo updatedTodo = todoRepository.save(todo);
+
+        return mapper.map(updatedTodo, TodoDTO.class);
+    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -63,7 +85,7 @@ public class TodoController {
         try {
             todoRepository.delete(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException(NO_ENTITY_DELETION);
+            throw new NotFoundException(NO_ENTITY_FOUND);
         }
     }
 }

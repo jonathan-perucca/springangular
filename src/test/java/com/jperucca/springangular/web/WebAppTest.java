@@ -1,4 +1,4 @@
-package springangular.web;
+package com.jperucca.springangular.web;
 
 import com.jayway.restassured.RestAssured;
 import org.junit.Before;
@@ -9,7 +9,7 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import springangular.SpringangularApplication;
+import com.jperucca.springangular.SpringangularApplication;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SpringangularApplication.class)

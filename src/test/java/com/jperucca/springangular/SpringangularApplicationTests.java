@@ -1,4 +1,4 @@
-package springangular;
+package com.jperucca.springangular;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

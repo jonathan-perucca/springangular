@@ -1,4 +1,4 @@
-package springangular.config;
+package com.jperucca.springangular.config;
 
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;

@@ -1,4 +1,4 @@
-package springangular.web.exception;
+package com.jperucca.springangular.web.exception;
 
 public enum ErrorCode {
     NO_ENTITY_FOUND(10001, "No entity found"),

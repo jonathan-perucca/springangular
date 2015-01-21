@@ -1,4 +1,4 @@
-package springangular.web.helper;
+package com.jperucca.springangular.web.helper;
 
 import com.google.common.base.Splitter;
 import org.springframework.web.context.request.WebRequest;

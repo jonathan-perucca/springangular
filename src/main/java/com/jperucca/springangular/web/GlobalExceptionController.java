@@ -1,17 +1,17 @@
-package springangular.web;
+package com.jperucca.springangular.web;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
-import springangular.web.exception.DataIntegrityException;
-import springangular.web.exception.ErrorInfo;
-import springangular.web.exception.NotFoundException;
+import com.jperucca.springangular.web.exception.DataIntegrityException;
+import com.jperucca.springangular.web.exception.ErrorInfo;
+import com.jperucca.springangular.web.exception.NotFoundException;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static springangular.web.helper.HttpHelper.getUri;
+import static com.jperucca.springangular.web.helper.HttpHelper.getUri;
 
 @ControllerAdvice
 public class GlobalExceptionController {

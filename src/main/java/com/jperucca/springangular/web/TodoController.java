@@ -1,23 +1,23 @@
-package springangular.web;
+package com.jperucca.springangular.web;
 
+import com.jperucca.springangular.domain.Todo;
+import com.jperucca.springangular.repository.TodoRepository;
+import com.jperucca.springangular.web.dto.TodoDTO;
+import com.jperucca.springangular.web.exception.DataIntegrityException;
+import com.jperucca.springangular.web.exception.ErrorCode;
+import com.jperucca.springangular.web.exception.NotFoundException;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import springangular.domain.Todo;
-import springangular.repository.TodoRepository;
-import springangular.web.dto.TodoDTO;
-import springangular.web.exception.DataIntegrityException;
-import springangular.web.exception.ErrorCode;
-import springangular.web.exception.NotFoundException;
 
 import java.util.List;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
-import static springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
+import static com.jperucca.springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
 
 @RestController
 @RequestMapping("/todo")
@@ -59,7 +59,7 @@ public class TodoController {
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityException(ErrorCode.WRONG_ENTITY_INFORMATION);
         }
-        
+
         return mapper.map(savedTodo, TodoDTO.class);
     }
     

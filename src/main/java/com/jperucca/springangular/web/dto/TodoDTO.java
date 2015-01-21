@@ -1,6 +1,6 @@
-package springangular.web.dto;
+package com.jperucca.springangular.web.dto;
 
-import springangular.domain.Todo;
+import com.jperucca.springangular.domain.Todo;
 
 public class TodoDTO {
 

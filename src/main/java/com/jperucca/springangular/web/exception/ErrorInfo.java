@@ -1,4 +1,4 @@
-package springangular.web.exception;
+package com.jperucca.springangular.web.exception;
 
 public class ErrorInfo {
     private String url;

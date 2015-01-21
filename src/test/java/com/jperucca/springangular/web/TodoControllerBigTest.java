@@ -1,19 +1,19 @@
-package springangular.web;
+package com.jperucca.springangular.web;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import springangular.domain.Todo;
-import springangular.repository.TodoRepository;
-import springangular.web.dto.TodoDTO;
+import com.jperucca.springangular.domain.Todo;
+import com.jperucca.springangular.repository.TodoRepository;
+import com.jperucca.springangular.web.dto.TodoDTO;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.http.HttpStatus.*;
-import static springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
-import static springangular.web.exception.ErrorCode.WRONG_ENTITY_INFORMATION;
+import static com.jperucca.springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
+import static com.jperucca.springangular.web.exception.ErrorCode.WRONG_ENTITY_INFORMATION;
 
 /**
  * Big tests (or blackbox test / End to End)
@@ -150,6 +150,27 @@ public class TodoControllerBigTest extends WebAppTest {
         assertThat(updatedTodo, notNullValue());
         assertThat(updatedTodo.getId(), is(savedTodo.getId()));
         assertThat(updatedTodo.getDescription(), is(updatedDescription));
+    }
+    
+    @Test
+    public void shouldNot_Update_Todo_WhenTodoNotFound() {
+        Long unknownTodoId = 100L;
+        final String updatedDescription = "NewDescription of todo";
+
+        TodoDTO todoDTO = new TodoDTO(new Todo.Builder().withDescription(updatedDescription).build());
+        
+        given()
+            .header("Content-Type", "application/json")
+            .body(todoDTO)
+            .log().all()
+        .when()
+            .put("/todo/{id}", unknownTodoId)
+        .then()
+            .log().all()
+            .statusCode(NOT_FOUND.value())
+            .body("url", is("/todo/100"))
+            .body("errorCode", is(NO_ENTITY_FOUND.getCode()))
+            .body("reasonCause", is(NO_ENTITY_FOUND.getDescription()));
     }
     
     @Test

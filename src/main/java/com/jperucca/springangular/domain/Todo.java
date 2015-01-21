@@ -1,9 +1,11 @@
-package springangular.domain;
+package com.jperucca.springangular.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -14,6 +16,7 @@ public class Todo implements Serializable {
     private Long id;
     
     @Column(nullable = false)
+    @NotNull()
     private String description;
     
     private boolean checked;

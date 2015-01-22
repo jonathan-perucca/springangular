@@ -16,7 +16,6 @@ public class Todo implements Serializable {
     private Long id;
     
     @Column(nullable = false)
-    @NotNull()
     private String description;
     
     private boolean checked;

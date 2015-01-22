@@ -27,6 +27,7 @@
 		<restassured.version>2.3.0</restassured.version>
 		<dozer.version>5.4.0</dozer.version>
 		<guava.version>18.0</guava.version>
+        <h2.version>1.4.185</h2.version>
 	</properties>
 
 	<dependencies>
@@ -68,7 +69,12 @@
 			<version>${restassured.version}</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

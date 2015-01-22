@@ -16,7 +16,7 @@ import static com.jperucca.springangular.web.exception.ErrorCode.NO_ENTITY_FOUND
 import static com.jperucca.springangular.web.exception.ErrorCode.WRONG_ENTITY_INFORMATION;
 
 /**
- * Big tests (or blackbox test / End to End)
+ * Local big tests (or blackbox test / End to End)
  * Pushes an API call, checks that DB has expected datas
  * 
  **/

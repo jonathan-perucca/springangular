@@ -9,6 +9,7 @@ import com.jperucca.springangular.repository.TodoRepository;
 import com.jperucca.springangular.web.dto.TodoDTO;
 
 import static com.jayway.restassured.RestAssured.given;
+import static com.jperucca.springangular.domain.Todo.newTodo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.http.HttpStatus.*;
@@ -29,8 +30,8 @@ public class TodoControllerBigTest extends WebAppTest {
     
     @Before
     public void setUp() {
-        savedTodo = new Todo.Builder().withDescription("Description Test").build();
-        Todo secondTodoTest = new Todo.Builder().withDescription("Second description test").build();
+        savedTodo = newTodo().withDescription("Description Test").build();
+        Todo secondTodoTest = newTodo().withDescription("Second description test").build();
 
         todoRepository.save(savedTodo);
         todoRepository.save(secondTodoTest);
@@ -85,7 +86,7 @@ public class TodoControllerBigTest extends WebAppTest {
     @Test
     public void should_Create_OneTodo_Nominal() {
         final String todoDescription = "NewDesc";
-        Todo todoToCreate = new Todo.Builder().withDescription(todoDescription).build();
+        Todo todoToCreate = newTodo().withDescription(todoDescription).build();
         TodoDTO todoDTO = new TodoDTO(todoToCreate);
 
         given()
@@ -110,7 +111,7 @@ public class TodoControllerBigTest extends WebAppTest {
     
     @Test
     public void shouldNot_Create_Todo_WhenNoDescription() {
-        TodoDTO todoDTO = new TodoDTO(new Todo.Builder().build());
+        TodoDTO todoDTO = new TodoDTO(newTodo().build());
         
         given()
             .header("Content-Type", "application/json")
@@ -131,7 +132,7 @@ public class TodoControllerBigTest extends WebAppTest {
         Long savedTodoId = savedTodo.getId();
         final String updatedDescription = "NewDescription of todo";
 
-        TodoDTO todoDTO = new TodoDTO(new Todo.Builder().withDescription(updatedDescription).build());
+        TodoDTO todoDTO = new TodoDTO(newTodo().withDescription(updatedDescription).build());
         
         given()
             .header("Content-Type", "application/json")
@@ -157,7 +158,7 @@ public class TodoControllerBigTest extends WebAppTest {
         Long unknownTodoId = 100L;
         final String updatedDescription = "NewDescription of todo";
 
-        TodoDTO todoDTO = new TodoDTO(new Todo.Builder().withDescription(updatedDescription).build());
+        TodoDTO todoDTO = new TodoDTO(newTodo().withDescription(updatedDescription).build());
         
         given()
             .header("Content-Type", "application/json")

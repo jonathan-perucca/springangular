@@ -20,6 +20,10 @@ public class Todo implements Serializable {
     
     private boolean checked;
 
+    public static Builder newTodo() {
+        return new Builder();
+    }
+
     public Todo(){}
     
     private Todo(Builder builder) {

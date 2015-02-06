@@ -91,6 +91,7 @@ pour cette application "light", nous pouvons nous en passer.
 - Spring boot (autoconfiguration permet de ne pas avoir à rajouter de configuration de tomcat, de la DB ... dans un premier temps,
 il va s'appuyer sur les classes présentes dans le classloader (monté grâce aux dépendances présentes dans le pom.xml), et va charger 
 une configuration par défaut si aucune n'est trouvée)
+- Spring Actuator (permet d'accéder à des metrics et monitoring features (/health, /metrics, /env, /trace, ... cf spring boot documentation)
 - protractor
 
 ## Comment l'améliorer ?
@@ -106,7 +107,7 @@ une configuration par défaut si aucune n'est trouvée)
 
 ## Liste des frameworks utilisés
 
-- spring core, spring boot, spring starter module, spring mvc, spring data, spring profiles
+- spring core, spring boot, spring starter module, spring mvc, spring data, spring profiles, spring actuator
 - junit, mockito, restassured, spring test, hamcrest
 - dozer, java config, guava
 - angularjs, jasmine, protractor, bower

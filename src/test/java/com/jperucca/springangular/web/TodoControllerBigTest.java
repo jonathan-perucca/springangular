@@ -1,45 +1,37 @@
 package com.jperucca.springangular.web;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.jperucca.springangular.domain.Todo;
 import com.jperucca.springangular.repository.TodoRepository;
 import com.jperucca.springangular.web.dto.TodoDTO;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
 
 import static com.jayway.restassured.RestAssured.given;
+import static com.jperucca.springangular.domain.Todo.newTodo;
+import static com.jperucca.springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
+import static com.jperucca.springangular.web.exception.ErrorCode.WRONG_ENTITY_INFORMATION;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.http.HttpStatus.*;
-import static com.jperucca.springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
-import static com.jperucca.springangular.web.exception.ErrorCode.WRONG_ENTITY_INFORMATION;
 
 /**
  * Local big tests (or blackbox test / End to End)
  * Pushes an API call, checks that DB has expected datas
  * 
  **/
+@SqlGroup({
+        @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:import-dev.sql"),
+        @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:delete-dev.sql")
+})
 public class TodoControllerBigTest extends WebAppTest {
 
     @Autowired
     private TodoRepository todoRepository;
 
-    private Todo savedTodo;
-    
-    @Before
-    public void setUp() {
-        savedTodo = new Todo.Builder().withDescription("Description Test").build();
-        Todo secondTodoTest = new Todo.Builder().withDescription("Second description test").build();
-
-        todoRepository.save(savedTodo);
-        todoRepository.save(secondTodoTest);
-    }
-    
-    @After
-    public void tearDown() {
-        todoRepository.deleteAll();
-    }
+    private int firstTodoId = 1;
+    private String firstTodoDescription = "First Todo Unchecked";
 
     @Test
     public void should_Get_AllTodos_WithTwoTestTodoInResult() {
@@ -50,8 +42,8 @@ public class TodoControllerBigTest extends WebAppTest {
         .then()
             .log().all()
             .statusCode(OK.value())
-            .body("[0].id", is(savedTodo.getId().intValue()))
-            .body("[0].description", is(savedTodo.getDescription()));
+            .body("[0].id", is(firstTodoId))
+            .body("[0].description", is(firstTodoDescription));
     }
 
     @Test
@@ -59,12 +51,12 @@ public class TodoControllerBigTest extends WebAppTest {
         given()
             .log().all()
         .when()
-            .get("/todo/{id}", savedTodo.getId())
+            .get("/todo/{id}", firstTodoId)
         .then()
             .log().all()
             .statusCode(OK.value())
-            .body("todo.id", is(savedTodo.getId().intValue()))
-            .body("todo.description", is(savedTodo.getDescription()));
+            .body("todo.id", is(firstTodoId))
+            .body("todo.description", is(firstTodoDescription));
     }
     
     @Test
@@ -85,7 +77,7 @@ public class TodoControllerBigTest extends WebAppTest {
     @Test
     public void should_Create_OneTodo_Nominal() {
         final String todoDescription = "NewDesc";
-        Todo todoToCreate = new Todo.Builder().withDescription(todoDescription).build();
+        Todo todoToCreate = newTodo().withDescription(todoDescription).build();
         TodoDTO todoDTO = new TodoDTO(todoToCreate);
 
         given()
@@ -110,7 +102,7 @@ public class TodoControllerBigTest extends WebAppTest {
     
     @Test
     public void shouldNot_Create_Todo_WhenNoDescription() {
-        TodoDTO todoDTO = new TodoDTO(new Todo.Builder().build());
+        TodoDTO todoDTO = new TodoDTO(newTodo().build());
         
         given()
             .header("Content-Type", "application/json")
@@ -128,27 +120,26 @@ public class TodoControllerBigTest extends WebAppTest {
     
     @Test
     public void should_Update_Todo_Nominal() {
-        Long savedTodoId = savedTodo.getId();
         final String updatedDescription = "NewDescription of todo";
 
-        TodoDTO todoDTO = new TodoDTO(new Todo.Builder().withDescription(updatedDescription).build());
+        TodoDTO todoDTO = new TodoDTO(newTodo().withDescription(updatedDescription).build());
         
         given()
             .header("Content-Type", "application/json")
             .body(todoDTO)
             .log().all()
         .when()
-            .put("/todo/{id}", savedTodoId)
+            .put("/todo/{id}", firstTodoId)
         .then()
             .log().all()
             .statusCode(OK.value())
-            .body("todo.id", is(savedTodo.getId().intValue()))
+            .body("todo.id", is(1))
             .body("todo.description", is(updatedDescription));
 
         Todo updatedTodo = todoRepository.findByDescription(updatedDescription);
 
         assertThat(updatedTodo, notNullValue());
-        assertThat(updatedTodo.getId(), is(savedTodo.getId()));
+        assertThat(updatedTodo.getId(), is(Long.valueOf(firstTodoId)));
         assertThat(updatedTodo.getDescription(), is(updatedDescription));
     }
     
@@ -157,7 +148,7 @@ public class TodoControllerBigTest extends WebAppTest {
         Long unknownTodoId = 100L;
         final String updatedDescription = "NewDescription of todo";
 
-        TodoDTO todoDTO = new TodoDTO(new Todo.Builder().withDescription(updatedDescription).build());
+        TodoDTO todoDTO = new TodoDTO(newTodo().withDescription(updatedDescription).build());
         
         given()
             .header("Content-Type", "application/json")
@@ -181,7 +172,7 @@ public class TodoControllerBigTest extends WebAppTest {
         given()
             .log().all()
         .when()
-            .delete("/todo/{id}", savedTodo.getId())
+            .delete("/todo/{id}", firstTodoId)
         .then()
             .log().all()
             .statusCode(NO_CONTENT.value());

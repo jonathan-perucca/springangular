@@ -24,7 +24,7 @@ public class TodoCleanerService {
     private TodoRepository todoRepository;
 
     // Every 5 Minutes
-    @Scheduled(fixedDelay = 5 * 1000 * 60)
+    @Scheduled(fixedDelayString = "${scheduler.todos.remove.checked}")
     public void removeCheckedTodos() {
         logger.info("Scheduler launched at {}", new Date());
         

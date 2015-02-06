@@ -23,7 +23,7 @@ public class WebAppTest {
     @Value("${local.http.baseuri}")
     private String baseURI;
     
-    @Value("${local.http.port}")
+    @Value("${server.port}")
     private int localPort;
     
     /**

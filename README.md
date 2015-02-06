@@ -5,6 +5,7 @@
 ## À quoi ça sert ?
 
 - CRUD sur todo list (ajout de todo, suppression, update(checked/unchecked), list)
+- Scheduled job toutes les 5 minutes pour purger les todos "checked"
 
 ## Comment travailler dessus ?
 
@@ -106,7 +107,7 @@ une configuration par défaut si aucune n'est trouvée)
 ## Liste des frameworks utilisés
 
 - spring core, spring boot, spring starter module, spring mvc, spring data, spring profiles
-- junit, restassured, spring test, hamcrest
+- junit, mockito, restassured, spring test, hamcrest
 - dozer, java config, guava
 - angularjs, jasmine, protractor, bower
 - maven
@@ -117,6 +118,7 @@ une configuration par défaut si aucune n'est trouvée)
 
 - [Spring Boot Github]
 - [Spring Boot Documentation]
+- [Mockito Github]
 - [RestAssured Github]
 - [AngularJs internal patterns Github]
 - [Guava Github]
@@ -130,6 +132,7 @@ une configuration par défaut si aucune n'est trouvée)
 
 [Spring Boot Github]: https://github.com/spring-projects/spring-boot/
 [Spring Boot Documentation]: http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/
+[Mockito Github]: https://github.com/mockito/mockito
 [RestAssured Github]: https://github.com/jayway/rest-assured/
 [AngularJs internal patterns Github]: https://github.com/mgechev/angularjs-in-patterns/
 [Guava Github]: https://github.com/google/guava

@@ -14,12 +14,14 @@
 - maven
 - node (pour la partie front)
 - IDE indépendant (intellij/eclipse ou autre ...)
+- bower (npm install)
 
 ### Comment je m'y prends ?
 
 #### Pour lancer l'application avec backend et frontend
 
 - Dans un terminal, aller à la racine du projet (où se trouve le pom.xml)
+- Lancer la commande : bower install (pour installer les lib front)
 - Lancer la commande : mvn spring-boot:run
 - spring boot va monter automatiquement un tomcat embarqué, avec le déploiement automatique de l'application dessus, ainsi qu'une base de donnée en mémoire (hsqldb)
 

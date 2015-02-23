@@ -1,14 +1,13 @@
 package com.jperucca.springangular.web.exception;
 
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
+@ResponseStatus(BAD_REQUEST)
 public class DataIntegrityException extends RuntimeException {
     
-    private ErrorCode errorCode;
-    
     public DataIntegrityException(ErrorCode errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public ErrorCode getErrorCode() {
-        return errorCode;
+        super(errorCode.getMessage());
     }
 }

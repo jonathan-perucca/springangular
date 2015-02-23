@@ -69,9 +69,7 @@ public class TodoControllerBigTest extends WebAppTest {
         .then()
             .log().all()
             .statusCode(NOT_FOUND.value())
-            .body("url", is("/todo/" + unknownId))
-            .body("errorCode", is(NO_ENTITY_FOUND.getCode()))
-            .body("reasonCause", is(NO_ENTITY_FOUND.getDescription()));
+            .body("message", is(NO_ENTITY_FOUND.getMessage()));
     }
     
     @Test
@@ -111,11 +109,9 @@ public class TodoControllerBigTest extends WebAppTest {
         .when()
             .post("/todo")
         .then()
-            .statusCode(BAD_REQUEST.value())
             .log().all()
-            .body("url", is("/todo"))
-            .body("errorCode", is(WRONG_ENTITY_INFORMATION.getCode()))
-            .body("reasonCause", is(WRONG_ENTITY_INFORMATION.getDescription()));
+            .statusCode(BAD_REQUEST.value())
+            .body("message", is(WRONG_ENTITY_INFORMATION.getMessage()));
     }
     
     @Test
@@ -159,9 +155,7 @@ public class TodoControllerBigTest extends WebAppTest {
         .then()
             .log().all()
             .statusCode(NOT_FOUND.value())
-            .body("url", is("/todo/100"))
-            .body("errorCode", is(NO_ENTITY_FOUND.getCode()))
-            .body("reasonCause", is(NO_ENTITY_FOUND.getDescription()));
+            .body("message", is(NO_ENTITY_FOUND.getMessage()));
     }
     
     @Test
@@ -194,9 +188,7 @@ public class TodoControllerBigTest extends WebAppTest {
         .then()
             .log().all()
             .statusCode(NOT_FOUND.value())
-            .body("url", is("/todo/100"))
-            .body("errorCode", is(NO_ENTITY_FOUND.getCode()))
-            .body("reasonCause", is(NO_ENTITY_FOUND.getDescription()));
+            .body("message", is(NO_ENTITY_FOUND.getMessage()));
 
         long finalTotalEntries = todoRepository.count();
         assertThat(finalTotalEntries, is(initialTotalEntries));

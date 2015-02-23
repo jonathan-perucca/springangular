@@ -17,8 +17,7 @@ import static com.jperucca.springangular.config.Profiles.DEV;
 @SpringApplicationConfiguration(classes = SpringangularApplication.class)
 @WebIntegrationTest
 @ActiveProfiles(DEV)
-@Ignore
-public class WebAppTest {
+public abstract class WebAppTest {
     
     @Value("${local.http.baseuri}")
     private String baseURI;

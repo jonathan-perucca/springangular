@@ -18,6 +18,7 @@ import java.util.List;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.jperucca.springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
+import static com.jperucca.springangular.web.exception.ErrorCode.WRONG_ENTITY_INFORMATION;
 
 @RestController
 @RequestMapping("/todo")
@@ -57,7 +58,7 @@ public class TodoController {
         try {
             savedTodo = todoRepository.save(todo);
         } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityException(ErrorCode.WRONG_ENTITY_INFORMATION);
+            throw new DataIntegrityException(WRONG_ENTITY_INFORMATION);
         }
 
         return mapper.map(savedTodo, TodoDTO.class);

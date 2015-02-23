@@ -1,22 +1,16 @@
 package com.jperucca.springangular.web.exception;
 
 public enum ErrorCode {
-    NO_ENTITY_FOUND(10001, "No entity found"),
-    WRONG_ENTITY_INFORMATION(10002, "Could not create/update entity with wrong informations");
+    NO_ENTITY_FOUND("No entity found"),
+    WRONG_ENTITY_INFORMATION("Could not create/update entity with wrong informations");
     
-    private int code;
-    private String description;
+    private String message;
     
-    private ErrorCode(int code, String description) {
-        this.code = code;
-        this.description = description;
+    private ErrorCode(String message) {
+        this.message = message;
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public String getDescription() {
-        return description;
+    public String getMessage() {
+        return message;
     }
 }

@@ -7,11 +7,9 @@
         
         $scope.addTodo = function (todoDTO) {
             todoService.save({
-                todo : {
-                    description: todoDTO.description
-                }
-            }, function (todoDTO) {
-                    $scope.todos.push(todoDTO.todo);
+                description: todoDTO.description
+            }, function (todo) {
+                    $scope.todos.push(todo);
             });
             $scope.newTodo = "";
         };

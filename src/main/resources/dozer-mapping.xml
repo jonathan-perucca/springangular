@@ -4,12 +4,11 @@
           xsi:schemaLocation="http://dozer.sourceforge.net
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
 
-    <mapping wildcard="false">
-        <class-a>com.jperucca.springangular.domain.Todo</class-a>
-        <class-b>com.jperucca.springangular.web.dto.TodoDTO</class-b>
-        <field>
-            <a>this</a>
-            <b>todo</b>
-        </field>
-    </mapping>
+	<!--
+		Not needed anymore, we are not making dependant DTO and POJO
+		We can encounter complexe understanding issue when we get cyclomatic references
+		with jackson in those cases.
+		Furthermore, we are also able to fine grain (unit) test our dozer and jackson mappings
+		Keep decoupling in mind.
+	 -->
 </mappings>

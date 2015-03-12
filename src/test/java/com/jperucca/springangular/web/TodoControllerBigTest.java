@@ -2,7 +2,7 @@ package com.jperucca.springangular.web;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.http.ContentType.JSON;
-import static com.jperucca.springangular.domain.Todo.newTodo;
+import static com.jperucca.springangular.web.dto.TodoDTO.newTodoDTO;
 import static com.jperucca.springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
 import static com.jperucca.springangular.web.exception.ErrorCode.WRONG_ENTITY_INFORMATION;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -63,8 +63,8 @@ public class TodoControllerBigTest extends WebAppTest {
         .then()
             .log().all()
             .statusCode(OK.value())
-            .body("todo.id", is(firstTodoId))
-            .body("todo.description", is(firstTodoDescription));
+            .body("id", is(firstTodoId))
+            .body("description", is(firstTodoDescription));
     }
     
     @Test
@@ -83,8 +83,7 @@ public class TodoControllerBigTest extends WebAppTest {
     @Test
     public void should_Create_OneTodo_Nominal() {
         final String todoDescription = "NewDesc";
-        Todo todoToCreate = newTodo().withDescription(todoDescription).build();
-        TodoDTO todoDTO = new TodoDTO(todoToCreate);
+        TodoDTO todoDTO = newTodoDTO().withDescription(todoDescription).build();
 
         given()
 			.contentType(JSON)
@@ -96,8 +95,8 @@ public class TodoControllerBigTest extends WebAppTest {
         .then()
             .log().all()
             .statusCode(CREATED.value())
-            .body("todo.id", notNullValue())
-            .body("todo.description", is(todoDescription));
+            .body("id", notNullValue())
+            .body("description", is(todoDescription));
 
         // And then assert what has been done in db
         Todo createdTodo = todoRepository.findByDescription(todoDescription);
@@ -109,7 +108,7 @@ public class TodoControllerBigTest extends WebAppTest {
     
     @Test
     public void shouldNot_Create_Todo_WhenNoDescription() {
-        TodoDTO todoDTO = new TodoDTO(newTodo().build());
+        TodoDTO todoDTO = newTodoDTO().build();
         
         given()
 			.contentType(JSON)
@@ -127,8 +126,7 @@ public class TodoControllerBigTest extends WebAppTest {
     @Test
     public void should_Update_Todo_Nominal() {
         final String updatedDescription = "NewDescription of todo";
-
-        TodoDTO todoDTO = new TodoDTO(newTodo().withDescription(updatedDescription).build());
+        TodoDTO todoDTO = newTodoDTO().withDescription(updatedDescription).build();
 
         given()
 			.contentType(JSON)
@@ -140,8 +138,8 @@ public class TodoControllerBigTest extends WebAppTest {
         .then()
             .log().all()
             .statusCode(OK.value())
-            .body("todo.id", is(1))
-            .body("todo.description", is(updatedDescription));
+            .body("id", is(1))
+            .body("description", is(updatedDescription));
 
         Todo updatedTodo = todoRepository.findByDescription(updatedDescription);
 
@@ -154,8 +152,7 @@ public class TodoControllerBigTest extends WebAppTest {
     public void shouldNot_Update_Todo_WhenTodoNotFound() {
         Long unknownTodoId = 100L;
         final String updatedDescription = "NewDescription of todo";
-
-        TodoDTO todoDTO = new TodoDTO(newTodo().withDescription(updatedDescription).build());
+        TodoDTO todoDTO = newTodoDTO().withDescription(updatedDescription).build();
         
         given()
 			.contentType(JSON)

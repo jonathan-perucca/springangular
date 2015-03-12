@@ -20,14 +20,16 @@ public class Todo implements Serializable {
     
     private boolean checked;
 
-    public static Builder newTodo() {
-        return new Builder();
+    public Todo(){}
+
+    private Todo(Builder builder) {
+        setId(builder.id);
+        setDescription(builder.description);
+        setChecked(builder.checked);
     }
 
-    public Todo(){}
-    
-    private Todo(Builder builder) {
-        this.description = builder.description;
+    public static Builder newTodo() {
+        return new Builder();
     }
 
     public Long getId() {
@@ -59,14 +61,27 @@ public class Todo implements Serializable {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    public static class Builder {
-        private String description;
 
-        public Builder() {
+    public static final class Builder {
+        private Long id;
+        private String description;
+        private boolean checked;
+
+        private Builder() {
+        }
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
         }
 
         public Builder withDescription(String description) {
             this.description = description;
+            return this;
+        }
+
+        public Builder withChecked(boolean checked) {
+            this.checked = checked;
             return this;
         }
 

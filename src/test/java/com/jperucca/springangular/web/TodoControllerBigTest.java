@@ -1,20 +1,28 @@
 package com.jperucca.springangular.web;
 
-import com.jperucca.springangular.domain.Todo;
-import com.jperucca.springangular.repository.TodoRepository;
-import com.jperucca.springangular.web.dto.TodoDTO;
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.http.ContentType.JSON;
+import static com.jperucca.springangular.domain.Todo.newTodo;
+import static com.jperucca.springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
+import static com.jperucca.springangular.web.exception.ErrorCode.WRONG_ENTITY_INFORMATION;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
-import static com.jayway.restassured.RestAssured.given;
-import static com.jperucca.springangular.domain.Todo.newTodo;
-import static com.jperucca.springangular.web.exception.ErrorCode.NO_ENTITY_FOUND;
-import static com.jperucca.springangular.web.exception.ErrorCode.WRONG_ENTITY_INFORMATION;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.springframework.http.HttpStatus.*;
+import com.jperucca.springangular.domain.Todo;
+import com.jperucca.springangular.repository.TodoRepository;
+import com.jperucca.springangular.web.dto.TodoDTO;
 
 /**
  * Local big tests (or blackbox test / End to End)
@@ -79,7 +87,8 @@ public class TodoControllerBigTest extends WebAppTest {
         TodoDTO todoDTO = new TodoDTO(todoToCreate);
 
         given()
-            .header("Content-Type", "application/json")
+			.contentType(JSON)
+			.accept(JSON)
             .body(todoDTO)
             .log().all()
         .when()
@@ -103,7 +112,8 @@ public class TodoControllerBigTest extends WebAppTest {
         TodoDTO todoDTO = new TodoDTO(newTodo().build());
         
         given()
-            .header("Content-Type", "application/json")
+			.contentType(JSON)
+			.accept(JSON)
             .body(todoDTO)
             .log().all()
         .when()
@@ -119,9 +129,10 @@ public class TodoControllerBigTest extends WebAppTest {
         final String updatedDescription = "NewDescription of todo";
 
         TodoDTO todoDTO = new TodoDTO(newTodo().withDescription(updatedDescription).build());
-        
+
         given()
-            .header("Content-Type", "application/json")
+			.contentType(JSON)
+			.accept(JSON)
             .body(todoDTO)
             .log().all()
         .when()
@@ -147,7 +158,8 @@ public class TodoControllerBigTest extends WebAppTest {
         TodoDTO todoDTO = new TodoDTO(newTodo().withDescription(updatedDescription).build());
         
         given()
-            .header("Content-Type", "application/json")
+			.contentType(JSON)
+			.accept(JSON)
             .body(todoDTO)
             .log().all()
         .when()

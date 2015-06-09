@@ -41,7 +41,7 @@
 
 ### Comment est-ce organisé ?
 
-- Deux parties du projet distingues le front du back
+- Deux parties du projet distinguent le front du back
 - src/main/java (et src/test/java) correspondent à l'appli/tests backend
 - src/main/resources/static (et src/test/js) correspond à l'appli/tests frontend
 
